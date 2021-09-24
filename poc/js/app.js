@@ -3,8 +3,7 @@
   let entityId = null;
   let fullName = '';
   let deviceActiveZones = [];
-  let activeZoneId = null;
-  let activeDevice = false;
+  let activeDeviceId = false;
   let winterizingInterval = false;
 
   const inputApiKey = document.querySelector('#api-key');
@@ -21,19 +20,56 @@
   });
 
   buttonCancelWinterize.addEventListener('click', function() {
-    if (activeDevice && winterizingInterval) {
-      deviceStopWater(rachioKey, activeDevice);
-      activeDevice = false;
+    if (activeDeviceId && winterizingInterval) {
+      stopBlowout();
     }
   });
 
   buttonWinterize.addEventListener('click', function() {
-    if (winterizingInterval) {
-      runBlowout(inputTimeToBlow.value, inputTimeToRecover.value, inputCycles.value);
+    if (!winterizingInterval) {
+      if (!activeDeviceId) {
+        activeDeviceId = deviceActiveZones[0].id;
+      }
+      startBlowout(activeDeviceId, inputTimeToBlow.value, inputTimeToRecover.value, inputCycles.value);
     }
   });
 
-  function runBlowout(duration, recovery, cycles = 1) {
+  /**
+   * Stops the winterization/blow out process
+   */
+  function stopBlowout() {
+    deviceStopWater(rachioKey, activeDeviceId);
+    clearInterval(winterizingInterval);
+    winterizingInterval = false;
+  }
+
+  /**
+   * Starts the winterization/blow out process
+   * @param activeDeviceId String The device id to start winterization process
+   * @param duration Number The time to run air through the zone
+   * @param recovery Number The time to allow the air compressor to recover
+   * @param cycles Number The number of times to cycle through the zones
+   */
+  function startBlowout(activeDeviceId, duration, recovery, cycles = 1) {
+    function startZone(id) {
+      console.log(id, 'cycle: ' + cycles);
+      zoneStart(rachioKey, id, duration);
+    }
+    const activeZone = deviceActiveZones.filter(device => device.id === activeDeviceId)[0];
+
+    let index = 0;
+    startZone(activeZone.zones[index].id)
+    winterizingInterval = setInterval(() => {
+      if (typeof activeZone.zones[++index] === 'undefined') {
+        if (--cycles) {
+          index = 0;
+        } else {
+          stopBlowout();
+          return;
+        }
+      }
+      startZone(activeZone.zones[index].id)
+    }, duration * 1000 + recovery * 1000);
   }
 
   /**
@@ -122,10 +158,9 @@
    * Stop all watering on device
    * @param rachioKey String The key to authenticate to the API
    * @param deviceId String The device's unique id
-   * @returns {Promise<void>} TODO: remove async
    */
-  async function deviceStopWater(rachioKey, deviceId) {
-    const response = await fetch('https://api.rach.io/1/public/device/stop_water', {
+  function deviceStopWater(rachioKey, deviceId) {
+    fetch('https://api.rach.io/1/public/device/stop_water', {
       method: 'PUT',
       mode: 'cors',
       cache: 'no-cache',
@@ -136,11 +171,9 @@
       body: JSON.stringify({
         id: deviceId
       }),
+    }).catch((error) => {
+      throw new Error(`Error stopping watering: ${error}`);
     });
-
-    if (!response.ok) {
-      throw new Error(`Error stopping watering: ${response.status}`);
-    }
   }
 
   /**
@@ -148,10 +181,9 @@
    * @param rachioKey String The key to authenticate to the API
    * @param zoneId String The zone's unique id
    * @param duration Number Duration in seconds (Range is 0 - 10800 (3 Hours) )
-   * @returns {Promise<void>} TODO: remove async
    */
-  async function zoneStart(rachioKey, zoneId, duration) {
-    const response = await fetch('https://api.rach.io/1/public/zone/start', {
+  function zoneStart(rachioKey, zoneId, duration) {
+    fetch('https://api.rach.io/1/public/zone/start', {
       method: 'PUT',
       mode: 'cors',
       cache: 'no-cache',
@@ -161,13 +193,11 @@
       },
       body: JSON.stringify({
         id: zoneId,
-        duration: duration,
+        duration: parseFloat(duration)
       }),
+    }).catch((error) => {
+      throw new Error(`Error starting watering: ${error}`);
     });
-
-    if (!response.ok) {
-      throw new Error(`Error stopping watering: ${response.status}`);
-    }
   }
   
 }());

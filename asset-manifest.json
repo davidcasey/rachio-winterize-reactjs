@@ -1,23 +1,23 @@
 {
   "files": {
-    "main.css": "/rachio-winterize-reactjs/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/rachio-winterize-reactjs/static/js/main.09e20c5d.chunk.js",
-    "main.js.map": "/rachio-winterize-reactjs/static/js/main.09e20c5d.chunk.js.map",
-    "runtime-main.js": "/rachio-winterize-reactjs/static/js/runtime-main.ff1316ad.js",
-    "runtime-main.js.map": "/rachio-winterize-reactjs/static/js/runtime-main.ff1316ad.js.map",
-    "static/js/2.62d1c0db.chunk.js": "/rachio-winterize-reactjs/static/js/2.62d1c0db.chunk.js",
-    "static/js/2.62d1c0db.chunk.js.map": "/rachio-winterize-reactjs/static/js/2.62d1c0db.chunk.js.map",
-    "static/js/3.5312ef16.chunk.js": "/rachio-winterize-reactjs/static/js/3.5312ef16.chunk.js",
-    "static/js/3.5312ef16.chunk.js.map": "/rachio-winterize-reactjs/static/js/3.5312ef16.chunk.js.map",
+    "main.css": "/rachio-winterize-reactjs/static/css/main.9afe4d33.chunk.css",
+    "main.js": "/rachio-winterize-reactjs/static/js/main.8101167d.chunk.js",
+    "main.js.map": "/rachio-winterize-reactjs/static/js/main.8101167d.chunk.js.map",
+    "runtime-main.js": "/rachio-winterize-reactjs/static/js/runtime-main.375dad5a.js",
+    "runtime-main.js.map": "/rachio-winterize-reactjs/static/js/runtime-main.375dad5a.js.map",
+    "static/js/2.e4779a92.chunk.js": "/rachio-winterize-reactjs/static/js/2.e4779a92.chunk.js",
+    "static/js/2.e4779a92.chunk.js.map": "/rachio-winterize-reactjs/static/js/2.e4779a92.chunk.js.map",
+    "static/js/3.70bc6d7a.chunk.js": "/rachio-winterize-reactjs/static/js/3.70bc6d7a.chunk.js",
+    "static/js/3.70bc6d7a.chunk.js.map": "/rachio-winterize-reactjs/static/js/3.70bc6d7a.chunk.js.map",
     "index.html": "/rachio-winterize-reactjs/index.html",
-    "static/css/main.8c8b27cf.chunk.css.map": "/rachio-winterize-reactjs/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.62d1c0db.chunk.js.LICENSE.txt": "/rachio-winterize-reactjs/static/js/2.62d1c0db.chunk.js.LICENSE.txt",
-    "static/media/logo.6ce24c58.svg": "/rachio-winterize-reactjs/static/media/logo.6ce24c58.svg"
+    "static/css/main.9afe4d33.chunk.css.map": "/rachio-winterize-reactjs/static/css/main.9afe4d33.chunk.css.map",
+    "static/js/2.e4779a92.chunk.js.LICENSE.txt": "/rachio-winterize-reactjs/static/js/2.e4779a92.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/rachio-winterize-reactjs/static/media/roboto-v29-latin-regular.9b78ea3b.woff"
   },
   "entrypoints": [
-    "static/js/runtime-main.ff1316ad.js",
-    "static/js/2.62d1c0db.chunk.js",
-    "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.09e20c5d.chunk.js"
+    "static/js/runtime-main.375dad5a.js",
+    "static/js/2.e4779a92.chunk.js",
+    "static/css/main.9afe4d33.chunk.css",
+    "static/js/main.8101167d.chunk.js"
   ]
 }

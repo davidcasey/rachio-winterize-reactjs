@@ -74,7 +74,7 @@
 
   /**
    * Initialize the data using the API key
-   * @param rachioKey String the key to authenticate to the API
+   * @param rachioKey String The key to authenticate to the API
    */
   function initializeData(rachioKey) {
     getPersonEntity(rachioKey).then(entity => {
@@ -93,7 +93,6 @@
 
         /* console log initialized data
          */
-        console.log(entityId);
         console.log(info);
         deviceActiveZones.forEach(device => {
           console.log(fullName, device.name, device.id, device.latitude, device.longitude);

@@ -11,9 +11,22 @@ import { InputCycles } from './components/InputCycles';
 function App() {
   const [entity, setEntity] = useState({});
   const [devices, setDevices] = useState({});
-  const [duration, setDuration] = useState(10);
-  const [recovery, setRecovery] = useState(10);
+  const [duration, setDuration] = useState(60);
+  const [recovery, setRecovery] = useState(420);
   const [cycles, setCycles] = useState(1);
+
+  // Must keep the browser open: run on server: create an account or just a service that runs? build an app?
+  // best to try and time the recovery is close to exact not to lose air via leaks
+  // Need to make custom for each zone: duration and recovery
+  // Cycles are not a loop. Cycles need to be appended to an array to iterate
+  // Manual run the first time. Next button to skip to next stage: blowout, recharge
+  // log that shows completed work and times
+
+  // maybe make the first recovery dynamic, start and hit a button to set the recovery time
+  // some way to micro adjust duration and recovery
+  // URL to autofill fields
+  // Minutes elapsed/remaining, Estimated time completion
+  // Try out with a "Stop watering after date"
 
   const initializeData = (entity: Entity) => {
     getDeviceInfo(entity.token, entity.id).then((info:any) => {
@@ -46,9 +59,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <InputToken
-          onTokenSuccess={initializeData}
-        />
+        <InputToken onValidToken={initializeData} />
       </header>
       <main>
         <div className="row">

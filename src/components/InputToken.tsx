@@ -5,34 +5,35 @@ import { getPersonEntity } from '../services/Rachio';
 
 export type InputTokenProps = {
   initialToken?: string;
-  onTokenSuccess: (entity: Entity) => void;
+  onValidToken: (entity: Entity) => void;
 };
 
-export const InputToken = ({ initialToken, onTokenSuccess }: InputTokenProps) => {
+export const InputToken = ({ initialToken, onValidToken }: InputTokenProps) => {
   const [token, setToken] = useState(initialToken || '');
-  const [tokenError, setTokenError] = useState(false);
+  const [invalidToken, setInvalidToken] = useState(false);
 
   const apiTokenInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setToken(e.target.value);
   };
 
-  const onSubmitToken = () => {
+  const onSubmitToken = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     getPersonEntity(token).then(({ id }: any) => {
       if (id) {
-        setTokenError(false);
-        onTokenSuccess({
+        setInvalidToken(false);
+        onValidToken({
           token,
           id,
           fullName: ''
         });
         return;
       }
-      setTokenError(true);
+      setInvalidToken(true);
     });
   };
 
   return (
-    <div className="container">
+    <form className="container" onSubmit={onSubmitToken}>
       <label htmlFor="api-token">
         API Token <a href="https://rachio.readme.io/docs/authentication" className="locate-token"
                      target="_blank" rel="noreferrer">Locate your token</a>
@@ -40,22 +41,21 @@ export const InputToken = ({ initialToken, onTokenSuccess }: InputTokenProps) =>
       <input
         id="api-token"
         type="text"
-        className={tokenError ? 'invalid' : ''}
+        className={invalidToken ? 'invalid' : ''}
         value={token}
         onChange={apiTokenInputChange}
       />
       <button
-        type="button"
+        type="submit"
         id="fetch-api"
-        onClick={onSubmitToken}
       >
         Fetch
       </button>
-      {tokenError &&
+      {invalidToken &&
         <p className="invalid">Invalid token</p>
       }
       <p className="disclaimer">Your Rachio API token is never stored on our server and only used for the duration of your session.
         Accessing the site over a public network is not recommended.</p>
-    </div>
+    </form>
   );
 };

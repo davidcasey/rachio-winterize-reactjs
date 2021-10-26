@@ -1,7 +1,21 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, {ChangeEvent, useEffect, useReducer} from 'react';
 import { Entity } from '../models/entity';
 
 import { getPersonEntity } from '../services/Rachio';
+
+const SET_TOKEN_INPUT = 'SET_TOKEN_INPUT';
+const SET_TOKEN_VALID = 'SET_TOKEN_VALID';
+
+const tokenReducer = (state: any, action: any) => {
+  switch (action.type) {
+    case SET_TOKEN_INPUT:
+      return { ...state, value: action.payload };
+    case SET_TOKEN_VALID:
+      return { ...state, isValid: action.payload };
+    default:
+      return { ...state };
+  }
+};
 
 export type InputTokenProps = {
   initialToken?: string;
@@ -9,27 +23,46 @@ export type InputTokenProps = {
 };
 
 export const InputToken = ({ initialToken, onValidToken }: InputTokenProps) => {
-  const [token, setToken] = useState(initialToken || '');
-  const [invalidToken, setInvalidToken] = useState(false);
+  const [tokenState, tokenDispatch] = useReducer(tokenReducer, { value: initialToken || '', isValid: null });
 
   const apiTokenInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setToken(e.target.value);
+    tokenDispatch({
+      type: SET_TOKEN_INPUT,
+      payload: e.target.value,
+    });
   };
 
-  const onSubmitToken = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    getPersonEntity(token).then(({ id }: any) => {
+  const validateToken = () => {
+    getPersonEntity(tokenState.value).then(({ id }: any) => {
       if (id) {
-        setInvalidToken(false);
+        tokenDispatch({
+          type: SET_TOKEN_VALID,
+          payload: true,
+        });
         onValidToken({
-          token,
+          token: tokenState.value,
           id,
           fullName: ''
         });
         return;
       }
-      setInvalidToken(true);
+      tokenDispatch({
+        type: SET_TOKEN_VALID,
+        payload: false,
+      });
     });
+  };
+
+  useEffect(() => {
+    if (initialToken) {
+      validateToken();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const onSubmitToken = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    validateToken();
   };
 
   return (
@@ -41,8 +74,8 @@ export const InputToken = ({ initialToken, onValidToken }: InputTokenProps) => {
       <input
         id="api-token"
         type="text"
-        className={invalidToken ? 'invalid' : ''}
-        value={token}
+        className={tokenState.isValid === false ? 'invalid' : ''}
+        value={tokenState.value}
         onChange={apiTokenInputChange}
       />
       <button
@@ -51,7 +84,7 @@ export const InputToken = ({ initialToken, onValidToken }: InputTokenProps) => {
       >
         Fetch
       </button>
-      {invalidToken &&
+      {tokenState.isValid === false &&
         <p className="invalid">Invalid token</p>
       }
       <p className="disclaimer">Your Rachio API token is never stored on our server and only used for the duration of your session.

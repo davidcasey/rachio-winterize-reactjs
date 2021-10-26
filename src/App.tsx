@@ -59,7 +59,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <InputToken onValidToken={initializeData} />
+        <InputToken
+          onValidToken={initializeData}
+        />
       </header>
       <main>
         <div className="row">
